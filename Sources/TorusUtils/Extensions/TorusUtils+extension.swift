@@ -144,8 +144,6 @@ extension TorusUtils {
         var resultArray = [Int: [String: String]]()
         var errorStack = [Error]()
         var requestArr = [URLRequest]()
-        os_log("before enumerating endpoints", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info)
-
         for (_,el) in endpoints.enumerated() {
             do {
                 // skip past binance
@@ -162,8 +160,6 @@ extension TorusUtils {
                 throw error
             }
         }
-
-        os_log("after enumerating endpoints", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info)
 
         return try await withThrowingTaskGroup(of: Result<TaskGroupResponse,Error>.self, body: {[unowned self] group in
             for (i,rq) in requestArr.enumerated() {
@@ -289,6 +285,12 @@ extension TorusUtils {
         var lookupCount = 0
         for (_, el) in endpoints.enumerated() {
             do {
+                if el.contains("binancex") {
+                    os_log("skipping: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
+                    continue
+                } else {
+                    os_log("make request: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -563,6 +565,12 @@ extension TorusUtils {
         var requestArray = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
+                if el.contains("binancex") {
+                    os_log("skipping: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
+                    continue
+                } else {
+                    os_log("make request: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArray.append(rq)
