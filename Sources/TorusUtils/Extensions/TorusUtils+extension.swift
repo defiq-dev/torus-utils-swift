@@ -147,7 +147,10 @@ extension TorusUtils {
         for (_,el) in endpoints.enumerated() {
             do {
                 // skip past binance
-                if el.contains("https://torus-node.binancex.dev/jrpc") { continue }
+                if el.contains("https://torus-node.binancex.dev/jrpc") {
+                    print("Skipping binance")
+                    continue
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
