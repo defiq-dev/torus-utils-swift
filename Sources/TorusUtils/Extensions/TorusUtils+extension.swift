@@ -348,7 +348,8 @@ extension TorusUtils {
                         throw error
                     }
                 } catch {
-                    // print(error)
+                    print("here we are")
+                    print(error)
                     let nsErr = error as NSError
                     let userInfo = nsErr.userInfo as [String: Any]
                     if error as? TorusUtilError == .timeout {
