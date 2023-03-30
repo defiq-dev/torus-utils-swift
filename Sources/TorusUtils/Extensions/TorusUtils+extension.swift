@@ -146,6 +146,8 @@ extension TorusUtils {
         var requestArr = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
+                // skip past binance
+                if el.contains("https://torus-node.binancex.dev/jrpc") { continue }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -348,8 +350,7 @@ extension TorusUtils {
                         throw error
                     }
                 } catch {
-                    print("here we are")
-                    print(error)
+                    // print(error)
                     let nsErr = error as NSError
                     let userInfo = nsErr.userInfo as [String: Any]
                     if error as? TorusUtilError == .timeout {
@@ -359,15 +360,6 @@ extension TorusUtils {
                     if nsErr.code == -1003 {
                         // In case node is offline
                         os_log("commitmentRequest: DNS lookup failed, node %@ is probably offline.", log: getTorusLogger(log: TorusUtilsLogger.network, type: .error), type: .error, userInfo["NSErrorFailingURLKey"].debugDescription)
-                        // Reject if threshold nodes unavailable
-                        lookupCount += 1
-                        if lookupCount > endpoints.count {
-                            group.cancelAll()
-                            throw TorusUtilError.nodesUnavailable
-                        }
-                    } else if (nsErr.code == -1001) {
-                        // Node times out
-                        os_log("commitmentRequest: Connection timed out, node %@ is probably offline.", log: getTorusLogger(log: TorusUtilsLogger.network, type: .error), type: .error, userInfo["NSErrorFailingURLKey"].debugDescription)
                         // Reject if threshold nodes unavailable
                         lookupCount += 1
                         if lookupCount > endpoints.count {
@@ -573,7 +565,7 @@ extension TorusUtils {
             for (i,rq) in requestArray.enumerated() {
                 group.addTask {
                     do {
-                        let val = try await urlSession.data(for: rq)
+                        let val = try await self.urlSession.data(for: rq)
                         return .success(.init(data: val.0, urlResponse: val.1, index: i))
                     } catch {
                         return .failure(error)
