@@ -148,10 +148,10 @@ extension TorusUtils {
             do {
                 // skip past binance
                 if el.contains("binancex") {
-                    print("Skipping \(el)")
+                    os_log("skipping: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
                     continue
                 } else {
-                    print("make request for \(el)")
+                    os_log("make request: %@", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info, "\(el)")
                 }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
