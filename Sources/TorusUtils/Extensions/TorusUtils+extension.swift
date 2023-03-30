@@ -144,6 +144,8 @@ extension TorusUtils {
         var resultArray = [Int: [String: String]]()
         var errorStack = [Error]()
         var requestArr = [URLRequest]()
+        os_log("before enumerating endpoints", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info)
+
         for (_,el) in endpoints.enumerated() {
             do {
                 // skip past binance
@@ -160,6 +162,9 @@ extension TorusUtils {
                 throw error
             }
         }
+
+        os_log("after enumerating endpoints", log: getTorusLogger(log: TorusUtilsLogger.core, type: .info), type: .info)
+
         return try await withThrowingTaskGroup(of: Result<TaskGroupResponse,Error>.self, body: {[unowned self] group in
             for (i,rq) in requestArr.enumerated() {
                 group.addTask {
