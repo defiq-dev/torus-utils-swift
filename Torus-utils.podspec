@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   spec.swift_version   = "5.0"
   spec.author       = { "Torus Labs" => "rathishubham017@gmail.com" }
   spec.module_name = "TorusUtils"
-  spec.source       = { :git => "https://github.com/torusresearch/torus-utils-swift.git", :tag => spec.version }
+  spec.source       = { :git => "https://github.com/defiq-dev/torus-utils-swift.git", :tag => "master" }
   spec.source_files = "Sources/TorusUtils/*.{swift,json}","Sources/TorusUtils/**/*.{swift,json}"
   spec.dependency 'Torus-fetchNodeDetails', '~> 4.0.0'
   spec.dependency 'CryptoSwift', '~> 1.5.1'
