@@ -146,6 +146,10 @@ extension TorusUtils {
         var requestArr = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
+                // skip past binance
+                if el.contains("binancex.dev") {
+                    continue
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -153,6 +157,7 @@ extension TorusUtils {
                 throw error
             }
         }
+
         return try await withThrowingTaskGroup(of: Result<TaskGroupResponse,Error>.self, body: {[unowned self] group in
             for (i,rq) in requestArr.enumerated() {
                 group.addTask {
@@ -277,6 +282,9 @@ extension TorusUtils {
         var lookupCount = 0
         for (_, el) in endpoints.enumerated() {
             do {
+                if el.contains("binancex.dev") {
+                    continue
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -358,7 +366,6 @@ extension TorusUtils {
                     if nsErr.code == -1003 {
                         // In case node is offline
                         os_log("commitmentRequest: DNS lookup failed, node %@ is probably offline.", log: getTorusLogger(log: TorusUtilsLogger.network, type: .error), type: .error, userInfo["NSErrorFailingURLKey"].debugDescription)
-
                         // Reject if threshold nodes unavailable
                         lookupCount += 1
                         if lookupCount > endpoints.count {
@@ -552,6 +559,9 @@ extension TorusUtils {
         var requestArray = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
+                if el.contains("binancex.dev") {
+                    continue
+                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArray.append(rq)
@@ -564,7 +574,7 @@ extension TorusUtils {
             for (i,rq) in requestArray.enumerated() {
                 group.addTask {
                     do {
-                        let val = try await urlSession.data(for: rq)
+                        let val = try await self.urlSession.data(for: rq)
                         return .success(.init(data: val.0, urlResponse: val.1, index: i))
                     } catch {
                         return .failure(error)
