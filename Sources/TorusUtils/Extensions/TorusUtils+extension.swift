@@ -146,10 +146,6 @@ extension TorusUtils {
         var requestArr = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
-                // skip past binance
-                if el.contains("binancex.dev") {
-                    continue
-                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -282,9 +278,6 @@ extension TorusUtils {
         var lookupCount = 0
         for (_, el) in endpoints.enumerated() {
             do {
-                if el.contains("binancex.dev") {
-                    continue
-                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArr.append(rq)
@@ -559,9 +552,6 @@ extension TorusUtils {
         var requestArray = [URLRequest]()
         for (_,el) in endpoints.enumerated() {
             do {
-                if el.contains("binancex.dev") {
-                    continue
-                }
                 var rq = try makeUrlRequest(url: el)
                 rq.httpBody = rpcdata
                 requestArray.append(rq)
